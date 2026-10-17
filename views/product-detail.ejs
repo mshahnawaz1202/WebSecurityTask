@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<div class="product-detail-layout">
+    <div class="product-detail-main">
+        <div class="product-detail-card">
+            <div class="detail-image" style="background-image: url('<%= product.image_url %>');"></div>
+            <div class="detail-content">
+                <span class="badge-category"><%= product.category %></span>
+                <h1><%= product.name %></h1>
+                <p class="price-large">$<%= product.price.toFixed(2) %></p>
+                <p class="description-full"><%= product.description %></p>
+                <div class="stock-info">
+                    <span>In Stock: <strong><%= product.stock %> units</strong></span>
+                    <span>Hospital Certified & FDA Cleared</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Reviews Section (Target for Stored XSS) -->
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h3>Clinical & Customer Reviews (<%= reviews.length %>)</h3>
+                <span class="security-note">
+                    <% if (mode === 'vulnerable') { %>
+                        [Vulnerable]: Reviews rendered unescaped via <code>&lt;%- review.comment %&gt;</code>
+                    <% } else { %>
+                        [Secure]: Reviews encoded safely via <code>&lt;%= review.comment %&gt;</code>
+                    <% } %>
+                </span>
+            </div>
+
+            <!-- Review Submission Form -->
+            <form action="/products/<%= product.id %>/review" method="POST" class="review-form">
+                <h4>Leave a Verified Review:</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="author">Your Name / Handle:</label>
+                        <input type="text" id="author" name="author" value="<%= user ? user.username : 'Anonymous User' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">Rating (1 to 5):</label>
+                        <select name="rating" id="rating">
+                            <option value="5">5 / 5 (Excellent)</option>
+                            <option value="4">4 / 5 (Good)</option>
+                            <option value="3">3 / 5 (Average)</option>
+                            <option value="2">2 / 5 (Poor)</option>
+                            <option value="1">1 / 5 (Unsatisfactory)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Review Comments (Try Stored XSS payload):</label>
+                    <textarea id="comment" name="comment" rows="3" placeholder="e.g. <script>alert('Stored XSS in Clinical Reviews!')</script> or <img src=x onerror=alert('Stored-XSS')>" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('comment').value = `<img src=x onerror=alert('STORED-XSS-EXPLOITED!')>`">
+                        Insert XSS Payload
+                    </button>
+                </div>
+            </form>
+
+            <!-- Rendered Reviews List -->
+            <div class="reviews-list">
+                <% if (reviews && reviews.length > 0) { %>
+                    <% reviews.forEach(function(review) { %>
+                        <div class="review-item">
+                            <div class="review-meta">
+                                <span class="review-author">Author: <%= review.username %></span>
+                                <span class="review-rating">[Score: <%= review.rating %>/5]</span>
+                                <span class="review-date"><%= review.created_at %></span>
+                            </div>
+                            <div class="review-comment-box">
+                                <% if (mode === 'vulnerable') { %>
+                                    <!-- VULNERABLE: Direct raw unescaped HTML interpolation -->
+                                    <div class="rendered-comment"><%- review.comment %></div>
+                                <% } else { %>
+                                    <!-- SAFE: HTML Entity Escaping protects against script execution -->
+                                    <div class="rendered-comment"><%= review.comment %></div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="empty-reviews">No reviews recorded for this product yet.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

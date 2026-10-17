@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'CyberMart Healthcare' %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-mode="<%= mode %>">
+
+    <!-- Top Security Mode Status Banner -->
+    <div class="security-banner <%= mode === 'safe' ? 'mode-safe' : 'mode-vuln' %>">
+        <div class="banner-container">
+            <div class="banner-info">
+                <% if (mode === 'safe') { %>
+                    <span class="badge badge-safe">[SAFE VERSION ACTIVE]</span>
+                    <span class="banner-text">Defenses Enabled: Parameterized Queries, Output Encoding, Anti-CSRF Tokens, CSP</span>
+                <% } else { %>
+                    <span class="badge badge-vuln">[VULNERABLE VERSION ACTIVE]</span>
+                    <span class="banner-text">Defenses Disabled: Raw SQL Queries, Unescaped HTML Rendering, No CSRF Tokens</span>
+                <% } %>
+            </div>
+            <div class="banner-actions">
+                <a href="/toggle-mode" class="btn btn-switch">
+                    Switch to <%= mode === 'safe' ? 'Vulnerable Version' : 'Safe Version' %>
+                </a>
+                <a href="/api/reset-db" class="btn btn-reset" title="Reset all tables back to initial seed data">
+                    Reset DB
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-header">
+        <div class="header-container">
+            <a href="/" class="brand-logo">
+                <span class="logo-name">Cyber<strong>Mart</strong></span>
+                <span class="logo-sub">Healthcare & Rx</span>
+            </a>
+
+            <!-- Search Form (Target for Reflected XSS) -->
+            <form action="/search" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Search medicines, equipment..." value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+                <button type="submit" class="btn-search">Search</button>
+            </form>
+
+            <nav class="nav-links">
+                <a href="/products" class="<%= currentPath === '/products' ? 'active' : '' %>">Catalog</a>
+                <a href="/promo" class="<%= currentPath === '/promo' ? 'active' : '' %>">Coupons & Rx</a>
+                
+                <% if (user) { %>
+                    <a href="/dashboard" class="user-pill <%= currentPath === '/dashboard' ? 'active' : '' %>">
+                        User: <%= user.username %> ($<%= user.balance ? user.balance.toFixed(2) : '0.00' %>)
+                    </a>
+                    <a href="/logout" class="btn btn-sm btn-outline">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-sm btn-primary">Login / Sign In</a>
+                <% } %>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-container">

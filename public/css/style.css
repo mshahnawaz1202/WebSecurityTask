@@ -1,0 +1,851 @@
+/* ====================================================================
+   CyberMart - Healthcare Security Lab Stylesheet
+   Modern, Sleek, Professional Cybersecurity & Pharmacy Aesthetic
+   ==================================================================== */
+
+:root {
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --primary-light: #e0f2fe;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --danger: #ef4444;
+    --danger-bg: #fee2e2;
+    --success: #10b981;
+    --success-bg: #d1fae5;
+    --warning: #f59e0b;
+    --warning-bg: #fef3c7;
+    --dark-banner: #0f172a;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Security Status Banner */
+.security-banner {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid transparent;
+}
+
+.security-banner.mode-vuln {
+    background-color: #7f1d1d;
+    border-color: #dc2626;
+}
+
+.security-banner.mode-safe {
+    background-color: #064e3b;
+    border-color: #059669;
+}
+
+.banner-container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.banner-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.banner-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-vuln {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.badge-safe {
+    background-color: #10b981;
+    color: #ffffff;
+}
+
+.badge-category {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+/* Header & Navigation */
+.main-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.logo-icon {
+    font-size: 1.6rem;
+}
+
+.logo-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo-sub {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+    background: var(--primary-light);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+}
+
+.search-form {
+    display: flex;
+    flex: 1;
+    max-width: 450px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius) 0 0 var(--radius);
+    outline: none;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.search-form input:focus {
+    border-color: var(--primary);
+}
+
+.btn-search {
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 0 1rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-search:hover {
+    background: var(--primary-hover);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary);
+}
+
+.user-pill {
+    background: #f1f5f9;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.85rem !important;
+    border: 1px solid var(--border-color);
+}
+
+/* Page Container */
+.page-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
+    flex: 1;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary-light);
+}
+
+.btn-switch {
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 700;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.78rem;
+}
+
+.btn-switch:hover {
+    background: #f1f5f9;
+}
+
+.btn-reset {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+}
+
+.btn-reset:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+}
+
+.btn-xs {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    padding: 2.5rem 2rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.hero-section h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.hero-section .subtitle {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.hero-tags {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.hero-tags .tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* Promo Banner (DOM XSS Target) */
+.promo-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--warning);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.promo-icon {
+    font-size: 1.8rem;
+}
+
+.promo-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.promo-text {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+/* Product Cards & Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.product-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.product-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e2e8f0;
+}
+
+.product-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.product-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+/* Forms & Panels */
+.panel-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.standard-form .form-group, .auth-form .form-group, .review-form .form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+    color: var(--text-secondary);
+}
+
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+}
+
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Lab Matrix & Helper Panels */
+.lab-guide-card, .attack-helper-panel {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.lab-guide-card h3, .attack-helper-panel h4 {
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.guide-box {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.guide-box h4 {
+    font-size: 0.95rem;
+    color: var(--primary);
+    margin-bottom: 0.35rem;
+}
+
+.guide-box p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.code-link, code {
+    font-family: var(--font-mono);
+    background: #f1f5f9;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    color: #e11d48;
+    word-break: break-all;
+}
+
+.diagnostic-box {
+    background: #0f172a;
+    color: #38bdf8;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.diagnostic-title {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Alerts */
+.alert {
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.alert-danger {
+    background: var(--danger-bg);
+    color: #991b1b;
+    border: 1px solid #f87171;
+}
+
+.alert-info {
+    background: var(--primary-light);
+    color: #0369a1;
+    border: 1px solid #7dd3fc;
+}
+
+/* Product Detail & Reviews Layout */
+.product-detail-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.detail-image {
+    width: 350px;
+    background-size: cover;
+    background-position: center;
+    background-color: #cbd5e1;
+}
+
+.detail-content {
+    padding: 2rem;
+    flex: 1;
+}
+
+.price-large {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0.5rem 0 1rem;
+}
+
+.reviews-section {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.review-form {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.review-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.review-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+}
+
+.review-author {
+    font-weight: 700;
+}
+
+.review-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.review-comment-box {
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+/* Auth Layout */
+.auth-container {
+    max-width: 480px;
+    margin: 2rem auto;
+}
+
+.auth-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.default-creds-box {
+    margin-top: 1.5rem;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+}
+
+.default-creds-box ul {
+    margin-left: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+/* Dashboard */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.user-role-badge {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #334155;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.user-balance-card {
+    text-align: right;
+}
+
+.balance-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--success);
+}
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.audit-table th, .audit-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.audit-table th {
+    background: #f8fafc;
+    color: var(--text-secondary);
+}
+
+/* DOM Widget box */
+.dom-target-box {
+    background: #f8fafc;
+    border: 2px dashed #94a3b8;
+    padding: 1rem;
+    border-radius: var(--radius);
+    min-height: 50px;
+    margin: 0.75rem 0;
+}
+
+/* Footer */
+.main-footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 2.5rem 1.5rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 2rem;
+}
+
+.footer-col h4 {
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.footer-col p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.footer-links {
+    list-style: none;
+    font-size: 0.85rem;
+}
+
+.footer-links li {
+    margin-bottom: 0.35rem;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #38bdf8;
+}
+
+.mode-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pill-btn {
+    text-decoration: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.pill-btn.active-vuln {
+    background: #ef4444;
+}
+
+.pill-btn.active-safe {
+    background: #10b981;
+}
+
+.copyright {
+    margin-top: 1rem;
+    font-size: 0.75rem !important;
+    color: #64748b;
+}

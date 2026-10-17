@@ -1,0 +1,141 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+    <h2>Prescription Claim & Coupon Verification</h2>
+    <p>Verify clinical discounts, pharmacy coupons, and test client-side DOM processing.</p>
+</div>
+
+<div class="two-column-layout">
+    <!-- Left Column: Intermediate SQL Injection (Blind Boolean / Error-based) -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h3>1. Prescription / Coupon Validator</h3>
+            <span class="badge <%= mode === 'safe' ? 'badge-safe' : 'badge-vuln' %>">
+                <%= mode === 'safe' ? 'Secure: Parameterized' : 'Vulnerable: Blind SQLi' %>
+            </span>
+        </div>
+        <p>Enter an active code (e.g. <code>HEALTH10</code>, <code>VIP25</code>, <code>RXMED50</code>) to verify discounts.</p>
+
+        <form id="coupon-form" class="standard-form">
+            <div class="form-group">
+                <label for="coupon-code">Coupon or Rx Code:</label>
+                <input type="text" id="coupon-code" name="code" value="HEALTH10" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Check Validity</button>
+            </div>
+        </form>
+
+        <div id="coupon-result" class="result-box" style="display: none;">
+            <h4>Validation Result:</h4>
+            <div id="result-message"></div>
+            <% if (mode === 'vulnerable') { %>
+                <div class="debug-query">
+                    <small>Executed SQL Query:</small>
+                    <code id="debug-sql"></code>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="attack-helper-panel" style="margin-top: 1.5rem;">
+            <h4>Blind Boolean-based SQLi Demonstration:</h4>
+            <p>Infer admin password characters based on <strong>Valid</strong> vs <strong>Invalid</strong> response:</p>
+            <ul class="attack-steps">
+                <li>
+                    <strong>TRUE Condition (Returns Valid):</strong><br>
+                    <code>HEALTH10' AND (SELECT SUBSTR(password,1,1) FROM users WHERE username='admin')='A' --</code>
+                    <button type="button" class="btn btn-xs btn-outline" onclick="testBlind('HEALTH10\' AND (SELECT SUBSTR(password,1,1) FROM users WHERE username=\'admin\')=\'A\' --')">Test True</button>
+                </li>
+                <li>
+                    <strong>FALSE Condition (Returns Invalid):</strong><br>
+                    <code>HEALTH10' AND (SELECT SUBSTR(password,1,1) FROM users WHERE username='admin')='Z' --</code>
+                    <button type="button" class="btn btn-xs btn-outline" onclick="testBlind('HEALTH10\' AND (SELECT SUBSTR(password,1,1) FROM users WHERE username=\'admin\')=\'Z\' --')">Test False</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Column: DOM-Based XSS Target -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h3>2. Client-Side Promo Tracker (DOM XSS)</h3>
+            <span class="badge <%= mode === 'safe' ? 'badge-safe' : 'badge-vuln' %>">
+                <%= mode === 'safe' ? 'Secure: textContent Sink' : 'Vulnerable: innerHTML Sink' %>
+            </span>
+        </div>
+        <p>This dynamic widget reads promotion codes directly from the client's URL Hash (<code>#promo=...</code>) or custom input without sending it to the server.</p>
+
+        <!-- DOM sink container -->
+        <div class="dom-widget">
+            <span class="widget-label">Live Dynamic DOM Display:</span>
+            <div id="dom-target" class="dom-target-box">
+                <em>No promotion hash detected in URL yet.</em>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 1rem;">
+            <label for="custom-dom-payload">Test Client-Side Payload:</label>
+            <input type="text" id="custom-dom-payload" value="<img src=x onerror=alert('DOM-XSS-Triggered!')>">
+        </div>
+        <div class="button-group">
+            <button type="button" class="btn btn-primary" onclick="applyDomPayload()">Inject via DOM Sink</button>
+            <button type="button" class="btn btn-outline" onclick="window.location.hash = '#promo=' + encodeURIComponent(document.getElementById('custom-dom-payload').value)">Set in URL Hash</button>
+        </div>
+
+        <div class="alert alert-info" style="margin-top: 1.5rem;">
+            <strong>[MECHANISM]:</strong>
+            <p>In <strong>Vulnerable Mode</strong>, client JS executes <code>element.innerHTML = hashValue</code>.</p>
+            <p>In <strong>Safe Mode</strong>, client JS uses <code>element.textContent = hashValue</code>.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // AJAX for Blind SQLi coupon verification
+    document.getElementById('coupon-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const code = document.getElementById('coupon-code').value;
+        verifyCode(code);
+    });
+
+    function testBlind(payload) {
+        document.getElementById('coupon-code').value = payload;
+        verifyCode(payload);
+    }
+
+    function verifyCode(code) {
+        const resultBox = document.getElementById('coupon-result');
+        const messageDiv = document.getElementById('result-message');
+        const sqlCode = document.getElementById('debug-sql');
+
+        fetch('/api/verify-coupon?code=' + encodeURIComponent(code))
+            .then(res => res.json())
+            .then(data => {
+                resultBox.style.display = 'block';
+                if (data.valid) {
+                    messageDiv.innerHTML = '<span class="text-success">[PASS] ' + (data.message || 'Valid Coupon!') + '</span>';
+                } else if (data.error) {
+                    messageDiv.innerHTML = '<span class="text-danger">[ERROR] SQL Error: ' + data.error + '</span>';
+                } else {
+                    messageDiv.innerHTML = '<span class="text-warning">[FAIL] ' + (data.message || 'Invalid Coupon Code.') + '</span>';
+                }
+                if (sqlCode && data.query) {
+                    sqlCode.textContent = data.query;
+                }
+            })
+            .catch(err => {
+                resultBox.style.display = 'block';
+                messageDiv.innerHTML = '<span class="text-danger">Request Failed</span>';
+            });
+    }
+
+    function applyDomPayload() {
+        const payload = document.getElementById('custom-dom-payload').value;
+        window.location.hash = '#promo=' + encodeURIComponent(payload);
+        if (window.renderDomPromo) {
+            window.renderDomPromo();
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>

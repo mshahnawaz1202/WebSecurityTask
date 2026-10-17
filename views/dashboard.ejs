@@ -1,0 +1,123 @@
+<%- include('partials/header') %>
+
+<div class="dashboard-header">
+    <div class="user-greeting">
+        <h2>Welcome, <%= user.username %></h2>
+        <span class="user-role-badge"><%= user.role.toUpperCase() %> ACCOUNT</span>
+    </div>
+    <div class="user-balance-card">
+        <span class="balance-label">Store Credit Balance:</span>
+        <span class="balance-amount">$<%= user.balance ? user.balance.toFixed(2) : '0.00' %></span>
+    </div>
+</div>
+
+<% if (typeof statusMessage !== 'undefined' && statusMessage) { %>
+    <div class="alert alert-info">
+        <%= statusMessage %>
+    </div>
+<% } %>
+
+<div class="two-column-layout">
+    <!-- State-Changing Action Form (Target for CSRF) -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h3>Transfer Health Store Credits</h3>
+            <span class="badge <%= mode === 'safe' ? 'badge-safe' : 'badge-vuln' %>">
+                <%= mode === 'safe' ? 'Protected: Anti-CSRF Token' : 'Vulnerable: No CSRF Token' %>
+            </span>
+        </div>
+        <p>Transfer balance instantly to another registered patient or pharmacy account.</p>
+
+        <form action="/transfer" method="POST" class="standard-form">
+            <!-- In SAFE mode, an anti-CSRF token is generated and attached -->
+            <% if (mode === 'safe' && typeof csrfToken !== 'undefined' && csrfToken) { %>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="csrf-indicator">
+                    <small>[CSRF DEFENSE ACTIVE]: Anti-CSRF Token Attached: <code><%= csrfToken.substring(0, 16) %>...</code></small>
+                </div>
+            <% } else { %>
+                <div class="csrf-warning">
+                    <small>[CSRF VULNERABILITY]: No CSRF Token in Vulnerable Mode (Susceptible to cross-origin forgery)</small>
+                </div>
+            <% } %>
+
+            <div class="form-group">
+                <label for="recipient">Recipient Username:</label>
+                <input type="text" id="recipient" name="recipient" placeholder="e.g. Shah Nawaz, Aamish Alvi, Ali Abbas" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount ($):</label>
+                <input type="number" id="amount" name="amount" min="1" max="10000" step="0.01" value="50.00" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Authorize Transfer</button>
+            </div>
+        </form>
+
+        <!-- CSRF Attack Demonstration Instructions -->
+        <div class="attack-helper-panel" style="margin-top: 1.5rem;">
+            <h4>[LAB WALKTHROUGH] CSRF Demonstration Steps:</h4>
+            <ol class="attack-steps">
+                <li>Log in as victim account (e.g. <code>Ali Abbas / Password123</code>). Notice initial balance is $1,200.00.</li>
+                <li>Ensure the app is in <strong>Vulnerable Mode</strong>.</li>
+                <li>In another browser tab, open the external attacker file:
+                    <br><code>d:\Semester 07\Information Security\A_02\attacker\csrf-attack.html</code>
+                    <br>(Or navigate to <code>http://localhost:3000/attacker-demo</code>).
+                </li>
+                <li>The malicious page automatically submits a hidden POST request transferring $150 to account <code>Shah Nawaz</code> without user consent.</li>
+                <li>Refresh this dashboard to observe balance deducted to $1,050.00.</li>
+                <li>Now switch to <strong>Safe Mode</strong> and repeat the test: the request is rejected with <code>403 Forbidden (CSRF token missing)</code>.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Right Column: Recent Transfers & Profile Details -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h3>Transfer Transaction Audit</h3>
+        </div>
+        <p>Recent credit transfers associated with your account:</p>
+
+        <div class="table-responsive">
+            <table class="audit-table">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (transfers && transfers.length > 0) { %>
+                        <% transfers.forEach(function(t) { %>
+                            <tr>
+                                <td><%= t.sender_username %></td>
+                                <td><%= t.recipient_username %></td>
+                                <td class="<%= t.recipient_username === user.username ? 'text-success' : 'text-danger' %>">
+                                    <%= t.recipient_username === user.username ? '+' : '-' %>$<%= t.amount.toFixed(2) %>
+                                </td>
+                                <td><small><%= t.timestamp %></small></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4">No transfers recorded yet.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="profile-info-box" style="margin-top: 1.5rem;">
+            <h4>User Profile Information</h4>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>User ID:</strong> <%= user.id %></p>
+            <p><strong>Permissions:</strong> <%= user.role %></p>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
