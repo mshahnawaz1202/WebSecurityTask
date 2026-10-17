@@ -1,4 +1,4 @@
-# CyberMart: Full-Stack Web Security Project (Blue Team Focus)
+# CyberMart: Full-Stack Web Security Project 
 
 A real-world healthcare and pharmacy e-commerce web application demonstrating common web vulnerabilities (OWASP Top 10), practical end-to-end exploits, and hardened Blue Team defenses in two switchable versions.
 
