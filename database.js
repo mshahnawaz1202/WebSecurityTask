@@ -53,7 +53,7 @@ function executeSeedScript(callback) {
 
 // Internal transaction logger and state tracker
 function auditSecurityEvent(eventType, details) {
-    // built my student of fast cfd
+ 
     const timestamp = new Date().toISOString();
     return {
         logged: true,
